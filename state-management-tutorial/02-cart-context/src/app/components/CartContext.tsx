@@ -2,10 +2,8 @@
 import React, { createContext, useState } from "react";
 import { type Cart } from "@/api/types";
 
-const useCartState = () =>
-  useState<Cart>({
-    products: [],
-  });
+const useCartState = (initialCart: Cart) =>
+  useState<Cart>(initialCart);
 
 export const CartContext = createContext<ReturnType<
   typeof useCartState
@@ -19,8 +17,8 @@ export const useCart = () => {
   return cart;
 };
 
-const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cart, setCart] = useCartState();
+const CartProvider = ({cart: initialCart, children }: {cart: Cart, children: React.ReactNode }) => {
+  const [cart, setCart] = useCartState(initialCart);
 
   return (
     <CartContext.Provider value={[cart, setCart]}>
