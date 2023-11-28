@@ -2,14 +2,14 @@
 import { useState } from "react";
 
 import { Review } from "@/api/types";
+import { useReviews } from "./ReviewsContext";
 
 export default function Reviews({
-  reviews,
   addReviewAction,
 }: {
-  reviews: Review[];
   addReviewAction: (text: string, rating: number) => Promise<Review[]>;
 }) {
+  const [reviews, setReviews] = useReviews();
   const [reviewText, setReviewText] = useState("");
   const [reviewRating, setReviewRating] = useState(5);
 
@@ -17,10 +17,10 @@ export default function Reviews({
     <>
       {reviews?.map((review, index) => (
         <div key={index} className="p-5">
-          <div className="my-1 text-md leading-5 text-gray-300">
+          <div className="my-1 text-md leading-5 text-gray-600">
             {review.rating} stars
           </div>
-          <div className="mt-1 text-sm leading-5 text-gray-300 font-light italic">
+          <div className="mt-1 text-sm leading-5 text-gray-500 font-light italic">
             {review.text}
           </div>
         </div>
@@ -28,7 +28,7 @@ export default function Reviews({
       <form
         onSubmit={async (evt) => {
           evt.preventDefault();
-          await addReviewAction(reviewText, reviewRating);
+          setReviews(await addReviewAction(reviewText, reviewRating));
           setReviewText("");
           setReviewRating(5);
         }}
